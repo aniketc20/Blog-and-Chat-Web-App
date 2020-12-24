@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% load static %}
+<h5>Welcome, {{ user.first_name }}</h5>
+<a class="p-2 text-dark" href="{% url 'logout' %}">Logout</a>
+{% endblock content %}
