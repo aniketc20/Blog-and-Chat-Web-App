@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<style> {% include 'bootstrap/css/bootstrap.css' %} {% include 'bootstrap/css/blog-home.css' %} </style>
+  {% load static %}
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+<!-- Blog Post -->
+<div class="card mb-4" id="all_blogs">
+    {% for post in cats %}
+    <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+    <div class="card-body">
+      Categories:
+      {% for cat in post.categories.all %}
+       <text style="color:red;">{{ cat.title }}</text>
+      {% endfor %}
+        <h2 class="card-title">{{ post.title }}</h2>
+      <a href="#" class="btn btn-primary">Read More &rarr;</a>
+    </div>
+    <div class="card-footer text-muted">
+      Posted on {{ post.date_pub|date }} by
+      <a href="#">{{ post.author }}</a>
+    </div>
+    {% endfor %}
+  </div>
+  </div>
+  </div>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}

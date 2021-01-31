@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from myblog.models import Categories
 
 from Account.views import (
     login_view,
@@ -25,7 +26,9 @@ from Account.views import (
     dashboard
 )
 from myblog.views import (
-    home
+    home,
+    category_view,
+    create_blog
 )
 
 urlpatterns = [
@@ -35,6 +38,8 @@ urlpatterns = [
     path('login/', login_view, name="login"),
     path('dashboard/', dashboard, name="dashboard"),
     path('logout/', logout_view, name="logout"),
+    path('create_blog/', create_blog, name="create_blog"),
+    path('category/<str:cats>', category_view, name="category")
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
