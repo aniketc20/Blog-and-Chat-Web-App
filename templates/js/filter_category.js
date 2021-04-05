@@ -9,7 +9,6 @@ $("#{{ category.id }}").on('click', function() {
             csrfmiddlewaretoken: csrf
         },
         success: function(response){
-            //console.log(response.data);
             $("#all_blogs").hide();
             //$("#all_blogs").show();
             //$('.col-lg-6').html($('.col-lg-6',response.data[0]).html());

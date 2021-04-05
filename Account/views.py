@@ -9,7 +9,7 @@ def login_view(request):
     context = {}
     user = request.user
     if user.is_authenticated:
-        return redirect("dashboard")
+        return redirect("home")
 
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
@@ -20,7 +20,7 @@ def login_view(request):
 
             if user:
                 login(request, user)
-                return redirect("dashboard")
+                return redirect("home")
 
     else:
         form = AccountAuthenticationForm()
@@ -43,7 +43,7 @@ def registration_view(request):
             raw_password = form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_password)
             login(request, account)
-            return redirect("dashboard")
+            return redirect("home")
         else:
             context['registration_form'] = form
             context['profile_form'] = profile_form

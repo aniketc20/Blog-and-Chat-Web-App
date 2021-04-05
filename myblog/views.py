@@ -29,8 +29,22 @@ def home(request):
     return render(request, "home.html", context)
 
 def category_view(request, cats):
-    cat = BlogPost.objects.filter(categories=cats)
-    return render(request, "category.html", {'cats': cat})
+    context={}
+    categories = Categories.objects.all()
+    context['categories'] = categories
+    query_set = BlogPost.objects.filter(categories=cats)
+    paginator = Paginator(query_set, 2)
+    page_req_var = 'page'
+    page = request.GET.get(page_req_var)
+    try:
+        paginated_queryset = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_queryset = paginator.page(1)
+    except EmptyPage:
+        paginated_queryset = paginator.page(paginator.num_pages)
+    context['blog'] = paginated_queryset
+    context['page'] = page_req_var
+    return render(request, "home.html", context)
 
 def create_blog(request):
     user = request.user
@@ -45,9 +59,19 @@ def create_blog(request):
         # IMP CONCEPT we need to initially save the model before we can use the id of the model to save the category
         obj.save() 
         obj.categories.set(category) # setting the categories
-        return redirect('dashboard')
+        return redirect('home')
     if user.is_authenticated:
+        form = BlogForm()
         context['blog_form'] = form
         context['categories'] = cat
         return render(request, "create_blog.html", context)
     return redirect("login")
+
+def blog_view(request, cats):
+    context = {}
+    print(cats)
+    blog = BlogPost.objects.get(id=cats)
+    cat = Categories.objects.all()
+    context['blog'] = blog
+    context['categories'] = cat
+    return render(request, "Blog_view.html", context)

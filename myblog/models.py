@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from ckeditor.fields import RichTextField
 
 class Categories(models.Model):
     title = models.CharField(max_length=20)
@@ -11,7 +12,7 @@ class Categories(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=200, null=False, blank=False)
     categories = models.ManyToManyField(Categories)
-    body = models.TextField(max_length=5000, null=False, blank=False)
+    body = RichTextField(blank=True, null=True)
     image = models.ImageField()
     date_pub = models.DateTimeField(auto_now_add=True, verbose_name='Date Published')
     date_up = models.DateTimeField(auto_now=True, verbose_name='Date Updated')

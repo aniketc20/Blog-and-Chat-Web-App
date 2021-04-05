@@ -28,7 +28,8 @@ from Account.views import (
 from myblog.views import (
     home,
     category_view,
-    create_blog
+    create_blog,
+    blog_view
 )
 
 urlpatterns = [
@@ -39,7 +40,8 @@ urlpatterns = [
     path('dashboard/', dashboard, name="dashboard"),
     path('logout/', logout_view, name="logout"),
     path('create_blog/', create_blog, name="create_blog"),
-    path('category/<str:cats>', category_view, name="category")
+    path('category/<str:cats>', category_view, name="category"),
+    path('category/<str:cats>/details', blog_view, name="blog_view")
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
