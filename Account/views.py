@@ -33,8 +33,8 @@ def registration_view(request):
     context = {}
     if request.POST:
         form = RegistrationForm(request.POST)
-        profile_form = ProfileForm(request.POST)
-        if form.is_valid() and profile_form.is_valid():
+        if form.is_valid():
+            print("success")
             user = form.save()
             profile = profile_form.save(commit=False)
             profile.user = user
@@ -46,14 +46,11 @@ def registration_view(request):
             return redirect("home")
         else:
             context['registration_form'] = form
-            context['profile_form'] = profile_form
             return render(request, 'register.html', context)
 
     else:
         form = RegistrationForm()
-        profile_form = ProfileForm(request.POST)
         context['registration_form'] = form
-        context['profile_form'] = profile_form
     return render(request, 'register.html', context)
 
 

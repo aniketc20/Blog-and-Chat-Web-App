@@ -26,6 +26,7 @@ def home(request):
         card_text = request.POST.get('text')
         cat = BlogPost.objects.filter(categories=card_text).values_list()
         return JsonResponse({'data': list(cat)})
+    print(context['blog'])
     return render(request, "home.html", context)
 
 def category_view(request, cats):
@@ -69,7 +70,6 @@ def create_blog(request):
 
 def blog_view(request, cats):
     context = {}
-    print(cats)
     blog = BlogPost.objects.get(id=cats)
     cat = Categories.objects.all()
     context['blog'] = blog

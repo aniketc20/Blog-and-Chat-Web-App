@@ -1,11 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% load static %} 
-<style>
-{% include 'Styles/create_blog.css' %}
-{% include 'Styles/editor.css' %}
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'create_blog.css' %}">
 </head>
 <body>
     <div class="container">

@@ -13,7 +13,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=200, null=False, blank=False)
     categories = models.ManyToManyField(Categories)
     body = RichTextField(blank=True, null=True)
-    image = models.ImageField()
+    image = models.ImageField(upload_to = '')
     date_pub = models.DateTimeField(auto_now_add=True, verbose_name='Date Published')
     date_up = models.DateTimeField(auto_now=True, verbose_name='Date Updated')
     # author establishes rel between user(author) and blog post
