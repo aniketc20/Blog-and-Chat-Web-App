@@ -1,9 +1,11 @@
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-# Create your views here.
 from .forms import AccountAuthenticationForm, RegistrationForm, ProfileForm
 from .models import Account, Profile
-
+from django.contrib.auth import get_user_model
+from django_email_verification import send_email
+from django.http import JsonResponse
+from django.core import serializers
 
 def login_view(request):
     context = {}
@@ -31,22 +33,23 @@ def login_view(request):
 
 def registration_view(request):
     context = {}
-    if request.POST:
+    if request.POST and request.is_ajax:
         form = RegistrationForm(request.POST)
+        profile_form = ProfileForm(request.POST)
         if form.is_valid():
             print("success")
             user = form.save()
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            email = form.cleaned_data.get('email')
-            raw_password = form.cleaned_data.get('password1')
-            account = authenticate(email=email, password=raw_password)
-            login(request, account)
-            return redirect("home")
+            send_email(user)
+            # send to client side.
+            return JsonResponse({"instance": 
+                                "An email has been sent to your registered email id please verify to activate your account"}, 
+                                status=200)
         else:
-            context['registration_form'] = form
-            return render(request, 'register.html', context)
+            # some form errors occured.
+            return JsonResponse({"error": form.errors}, status=400)
 
     else:
         form = RegistrationForm()
@@ -64,4 +67,3 @@ def dashboard(request):
     user = request.user
     if user.is_authenticated:
         return render(request, "dashboard.html", context)
-        

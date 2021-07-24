@@ -31,6 +31,7 @@ class MyAccountManager(BaseUserManager):
             last_name=last_name,
         )
         user.is_admin = True
+        user.is_active = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -45,7 +46,7 @@ class Account(AbstractUser):
     first_name = models.CharField(verbose_name='first_name',max_length=50, unique=False)
     last_name = models.CharField(verbose_name='last_name',max_length=50, unique=False)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
@@ -54,7 +55,7 @@ class Account(AbstractUser):
     objects = MyAccountManager()
 
     def __str__(self):
-        return self.email
+        return str(self.first_name) or ''
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
@@ -64,7 +65,7 @@ class Account(AbstractUser):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
     about = models.CharField(max_length=100, default='')
     city = models.CharField(max_length=100, default='')
     dob = models.DateField(verbose_name='D.O.B', unique=False)

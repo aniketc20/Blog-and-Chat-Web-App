@@ -1,0 +1,12 @@
+{% include "login.html" %}
+{% block content %}
+
+{% if success %}
+
+{{ user.first_name }}, your account is confirmed!
+Click <a href="{% url 'login' %}">here</a> to login.
+
+{% else %}
+Error, invalid token!
+{% endif %}
+{% endblock content %}

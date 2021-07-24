@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
 from Account.models import Account
-from .models import BlogPost, Categories
+from .models import BlogPost, Categories, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse, HttpResponse
 from .forms import BlogForm
@@ -57,9 +58,10 @@ def create_blog(request):
         category=form.cleaned_data['categories']
         author = Account.objects.filter(first_name=user.first_name).first()
         obj.author = author
-        # IMP CONCEPT we need to initially save the model before we can use the id of the model to save the category
+        # IMP CONCEPT we need to initially save the model before
+        # we can use the id of the model to save the category
         obj.save() 
-        obj.categories.set(category) # setting the categories
+        obj.categories.set(category)
         return redirect('home')
     if user.is_authenticated:
         form = BlogForm()
@@ -68,10 +70,28 @@ def create_blog(request):
         return render(request, "create_blog.html", context)
     return redirect("login")
 
-def blog_view(request, cats):
+def blog_view(request, pk):
     context = {}
-    blog = BlogPost.objects.get(id=cats)
+    blog = BlogPost.objects.get(id=pk)
     cat = Categories.objects.all()
+    comments = Comment.objects.filter(post=blog)
     context['blog'] = blog
     context['categories'] = cat
+    context['comments'] = comments
+    if request.method=='POST':
+        if 'comment' in request.POST:
+            comment = request.POST.get('comment')
+            Comment.objects.create(body=comment, author=request.user, post=blog)
+            return JsonResponse({'comment': comment})
+        if 'like' in request.POST:
+            users= blog.likes.all()
+            if(request.user in users):
+                blog.likes.remove(request.user)
+                return JsonResponse({'likes': users})
+            else:
+                blog.likes.add(request.user)
+                return JsonResponse({'likes': users})
     return render(request, "Blog_view.html", context)
+
+def chat(request, room):
+    return render(request, "chat.html", {'room': room})

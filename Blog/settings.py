@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ckeditor',
+    'channels',
+    'django_email_verification',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,28 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Blog.wsgi.application'
+ASGI_APPLICATION = 'Blog.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        ### Method 1: Via redis lab
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [
+        #       'redis://h:<password>;@<redis Endpoint>:<port>' 
+        #     ],
+        # },
+
+        ### Method 2: Via local Redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #      "hosts": [('127.0.0.1', 6379)],
+        # },
+
+        ### Method 3: Via In-memory channel layer
+        ## Using this method.
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
 AUTH_USER_MODEL = 'Account.Account'
 
 
@@ -82,11 +105,11 @@ AUTH_USER_MODEL = 'Account.Account'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dckc9svk3dlor1',
-        'HOST': 'ec2-34-230-115-172.compute-1.amazonaws.com',
-        'PORT': '5432   ',
-        'USER': 'yiyqsaksvbpjjf',
-        'PASSWORD': '2b9bfa862dc6259630ab07b6a063a47eb281346d0ae99f4f2ec9e916a6030ce9',
+        'NAME': 'blog',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'USER': 'postgres',
+        'PASSWORD': 'manada',
     }
 }
 
@@ -108,6 +131,29 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+def verified_callback(user):
+    user.is_active = True
+
+
+EMAIL_VERIFIED_CALLBACK = verified_callback
+EMAIL_FROM_ADDRESS = 'noreply@aliasaddress.com'
+EMAIL_MAIL_SUBJECT = 'Confirm your email'
+EMAIL_MAIL_HTML = 'mail_body.html'
+EMAIL_MAIL_PLAIN = 'mail_body.txt'
+EMAIL_TOKEN_LIFE = 60 * 60
+EMAIL_PAGE_TEMPLATE = 'confirm_template.html'
+EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/'
+
+
+# For Django Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'choudhary.aniketsonu.aniket@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = 'vdfpvzksrkuszlzt'  # os.environ['password_key'] suggested
 
 
 # Internationalization

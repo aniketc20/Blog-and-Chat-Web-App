@@ -1,0 +1,5 @@
+1. JWT auth
+2. forget password using gmail(frontend)
+3. pop up notification confirmation while deleting all sections
+4. in teaching type edit section change css of teaching type(put check box)
+5. select-days in batches will have check-box(multiple days), also while updating batch.

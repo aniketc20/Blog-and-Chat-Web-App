@@ -61,9 +61,9 @@
           <h5 class="card-header">Search</h5>
           <div class="card-body">
             <div class="input-group">
-              <input type="text" id="search_movie" class="form-control" placeholder="Search for...">
+              <input type="text" id="chat_room" class="form-control" placeholder="Search for...">
               <span class="input-group-append">
-                <button id="my_btn" onclick="movie()" class="btn btn-secondary" type="button">Go!</button>
+                <button id="my_btn" onclick="create_chat_room()" class="btn btn-secondary" type="button">Go!</button>
               </span>
             </div>
           </div>
@@ -122,4 +122,18 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    create_chat_room = () => 
+    {
+      var roomName = document.querySelector('#chat_room').value;
+      if (roomName=='')
+      {
+        alert('Enter a chat room!');
+      }
+      else
+      {
+        window.location.pathname = '/' + roomName + '/';
+      }
+    }
+  </script>
   {% endblock content %}

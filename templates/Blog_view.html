@@ -32,7 +32,22 @@
           <div class="card-footer text-muted">
             Posted on {{ blog.date_pub|date }} by
             <a href="#">{{ blog.author }}</a>
+            <br>
+            <hr>
+              <button type="submit", name="post_id", value="{{ blog.id }}" onclick="like()" id="like">
+                like
+              </button>
+              Total Likes: {{ blog.likes.count }}
           </div>
+          <h2>Comments..</h2>
+          {% if not blog.comments.all %}
+           No comments
+          {% else %}
+           {% for comment in blog.comments.all %}
+            <b> {{ comment.author }} : {{ comment.body }}</b>
+            {% endfor %}
+          {% endif %}
+          <input type="text" id="comment"><button type="submit" onclick="comment()">post comment</button>
         </div>
 
       </div>
@@ -79,6 +94,34 @@
   </footer>
 
   <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <script>
+    {% include 'ajax_setup.js' %}
+    function comment(){
+      console.log($("#comment").val())
+    $.ajax({
+      type: "POST",
+      data: {
+        'comment': 1,
+        'comment': $("#comment").val()
+      },
+      success: function(result){
+        console.log(result);
+        //$("#div1").html(result);
+      }});
+      }
+
+      function like(){
+    $.ajax({
+      type: "POST",
+      data: {
+        'like': 1,
+        'blog': $("#like").val()
+      },
+      success: function(result){
+        console.log(result);
+        //$("#div1").html(result);
+      }});
+      }
+  </script>
 {% endblock content %}
